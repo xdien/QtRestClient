@@ -232,55 +232,97 @@ private:
 template<typename DT, typename ET>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const QString &methodPath, const QVariantHash &parameters, const HeaderHash &headers, bool paramsAsBody) const
 {
+#ifdef __APPLE__
+    std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+        return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+    }, create(verb, methodPath, parameters, headers, paramsAsBody));
+#else
 	return std::visit([&](const auto &reply) {
 		return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 	}, create(verb, methodPath, parameters, headers, paramsAsBody));
+#endif
 }
 
 template<typename DT, typename ET, typename RO>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const QString &methodPath, const RO &body, const QVariantHash &parameters, const HeaderHash &headers) const
 {
+#ifdef __APPLE__
+    std::__variant_detail::__visitation::__variant::__visit_value([&](auto bodyData) {
+        std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+            return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+        }, create(verb, methodPath, bodyData, parameters, headers));
+    }, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#else
 	return std::visit([&](auto bodyData) {
 		return std::visit([&](const auto &reply) {
 			return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 		}, create(verb, methodPath, bodyData, parameters, headers));
 	}, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#endif
 }
 
 template<typename DT, typename ET>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const QVariantHash &parameters, const HeaderHash &headers, bool paramsAsBody) const
 {
+#ifdef __APPLE__
+    return std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+        return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+    }, create(verb, parameters, headers, paramsAsBody));
+#else
 	return std::visit([&](const auto &reply) {
 		return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 	}, create(verb, parameters, headers, paramsAsBody));
+#endif
 }
 
 template<typename DT, typename ET, typename RO>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const RO &body, const QVariantHash &parameters, const HeaderHash &headers) const
 {
+#ifdef __APPLE__
+    return std::__variant_detail::__visitation::__variant::__visit_value([&](auto bodyData) {
+        return std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+            return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+        }, create(verb, bodyData, parameters, headers));
+    }, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#else
 	return std::visit([&](auto bodyData) {
 		return std::visit([&](const auto &reply) {
 			return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 		}, create(verb, bodyData, parameters, headers));
 	}, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#endif
 }
 
 template<typename DT, typename ET>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const QUrl &relativeUrl, const QVariantHash &parameters, const HeaderHash &headers, bool paramsAsBody) const
 {
+#ifdef __APPLE__
+    return std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+        return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+    }, create(verb, relativeUrl, parameters, headers, paramsAsBody));
+#else
 	return std::visit([&](const auto &reply) {
 		return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 	}, create(verb, relativeUrl, parameters, headers, paramsAsBody));
+#endif
 }
 
 template<typename DT, typename ET, typename RO>
 GenericRestReply<DT, ET> *RestClass::call(const QByteArray &verb, const QUrl &relativeUrl, const RO &body, const QVariantHash &parameters, const HeaderHash &headers) const
 {
+#ifdef __APPLE__
+    return std::__variant_detail::__visitation::__variant::__visit_value([&](auto bodyData) {
+        return std::__variant_detail::__visitation::__variant::__visit_value([&](const auto &reply) {
+            return new GenericRestReply<DT, ET>{reply, client(), nullptr};
+        }, create(verb, relativeUrl, bodyData, parameters, headers));
+    }, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#else
 	return std::visit([&](auto bodyData) {
 		return std::visit([&](const auto &reply) {
 			return new GenericRestReply<DT, ET>{reply, client(), nullptr};
 		}, create(verb, relativeUrl, bodyData, parameters, headers));
 	}, client()->serializer()->serializeGeneric(QtJsonSerializer::__private::variant_helper<RO>::toVariant(body)));
+#endif
 }
 #endif
 
