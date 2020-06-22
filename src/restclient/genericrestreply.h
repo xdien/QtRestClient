@@ -322,8 +322,10 @@ template<typename DataClassType, typename ErrorClassType>
 GenericRestReply<DataClassType, ErrorClassType> *GenericRestReply<DataClassType, ErrorClassType>::onSucceeded(QObject *scope, std::function<void (int, DataClassType)> handler)
 {
 	RestReply::onSucceeded(scope, [this, xFn = std::move(handler)](int code, const RestReply::DataType &value){
+
 		try {
-			std::visit(__private::overload {
+#ifdef __APPLE__
+            std::__variant_detail::__visitation::__variant::__visit_value(__private::overload {
 						   [&](std::nullopt_t) {
 							   xFn(code, DataClassType{});
 						   },
@@ -331,6 +333,16 @@ GenericRestReply<DataClassType, ErrorClassType> *GenericRestReply<DataClassType,
 							   xFn(code, this->_client->serializer()->deserializeGeneric(data, qMetaTypeId<DataClassType>()).template value<DataClassType>());
 						   }
 					   }, value);
+#else
+            std::visit(__private::overload {
+                           [&](std::nullopt_t) {
+                               xFn(code, DataClassType{});
+                           },
+                           [&](const auto &data) {
+                               xFn(code, this->_client->serializer()->deserializeGeneric(data, qMetaTypeId<DataClassType>()).template value<DataClassType>());
+                           }
+                       }, value);
+#endif
 		} catch (QtJsonSerializer::DeserializationException &e) {
 			if (this->_exceptionHandler)
 				this->_exceptionHandler(e);
