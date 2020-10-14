@@ -114,6 +114,7 @@ void ObjectBuilder::generateApiGadget()
 	header << "\npublic:\n";
 	if(!data.enums.isEmpty())
 		writeEnums();
+        writePropertyEnums();
 	header << "\t" << data.name << "();\n";
 	writeAggregateConstructorDeclaration();
 	header << "\t" << data.name << "(const " << data.name << " &other);\n"
@@ -198,7 +199,7 @@ void ObjectBuilder::writeEnums()
 		if(!eElem.base.isEmpty())
 			header << "\tenum " << (eElem.isClass ? "class " : "") << eElem.name << " : " << eElem.base << " {\n";
 		else
-			header << "\tenum " << (eElem.isClass ? "class " : "") << eElem.name << " {\n";
+                        header << "\tenum " << data.name + "_e{\n";
 		for(const auto &value : eElem.keys) {
 			if(value.value.isEmpty())
 				header << "\t\t" << value.name << ",\n";
@@ -213,6 +214,26 @@ void ObjectBuilder::writeEnums()
 		} else
 			header << "\tQ_ENUM(" << eElem.name << ")\n\n";
 	}
+}
+
+void ObjectBuilder::writePropertyEnums()
+{
+
+        header << "\tenum " << data.name << "_e {\n";
+        for(const auto &propVar : qAsConst(data.properties)) {
+                const RestBuilderXmlReader::PropertyAttribs *attribs;
+                if (nonstd::holds_alternative<RestBuilderXmlReader::Property>(propVar)) {
+                        const auto &prop = nonstd::get<RestBuilderXmlReader::Property>(propVar);
+                        header << "\t\t" << prop.key << "_e,\n";
+                        attribs = &prop;
+                } else {
+                        const auto &prop = nonstd::get<RestBuilderXmlReader::UserProperty>(propVar);
+                        header << "\t\t" << prop.key << "_e,\n";
+                        attribs = &prop;
+                }
+        }
+        header << "\t};\n";
+
 }
 
 void ObjectBuilder::writeFlagOperators()

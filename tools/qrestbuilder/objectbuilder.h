@@ -29,6 +29,7 @@ private:
 	SudoProperty sudoProperty(const nonstd::variant<RestBuilderXmlReader::Property, RestBuilderXmlReader::UserProperty> &prop) const;
 
 	void writeEnums();
+        void writePropertyEnums();
 	void writeFlagOperators();
 	void writeProperties();
 	void writeAggregateConstructorDeclaration();
