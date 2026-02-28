@@ -1,0 +1,13 @@
+prefix=D:/Qt/5.15.2/mingw81_32
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+
+Name: Qt5 RestClientAuth
+Description: Qt RestClientAuth module
+Version: 3.0.0
+Libs: -L${libdir} -lQt5RestClientAuth 
+Cflags: -DQT_RESTCLIENTAUTH_LIB -I${includedir}/QtRestClientAuth -I${includedir}
+Requires: Qt5Core Qt5Network Qt5NetworkAuth Qt3RestClient
+

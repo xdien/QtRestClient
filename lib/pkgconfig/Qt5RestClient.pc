@@ -1,0 +1,13 @@
+prefix=D:/Qt/5.15.2/mingw81_32
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+
+Name: Qt5 RestClient
+Description: Qt RestClient module
+Version: 3.0.0
+Libs: -L${libdir} -lQt5RestClient 
+Cflags: -DQT_RESTCLIENT_LIB -I${includedir}/QtRestClient -I${includedir}
+Requires: Qt5Core Qt5Network Qt4JsonSerializer
+

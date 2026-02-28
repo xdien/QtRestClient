@@ -1,7 +1,9 @@
+TEMPLATE = lib
+CONFIG += dll
 TARGET = QtRestClient
 
 QT = core network core-private
-MODULE_CONFIG += qrestbuilder
+DEFINES += QT_BUILD_RESTCLIENT_LIB
 
 !no_json_serializer {
 	!qtHaveModule(jsonserializer): warning("Unable to find QtJsonSerializer module. To build without it, add \"CONFIG+=no_json_serializer\" to your qmake command line")

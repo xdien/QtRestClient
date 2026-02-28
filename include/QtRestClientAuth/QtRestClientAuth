@@ -1,0 +1,7 @@
+#ifndef QT_QTRESTCLIENTAUTH_MODULE_H
+#define QT_QTRESTCLIENTAUTH_MODULE_H
+#include <QtRestClientAuth/QtRestClientAuthDepends>
+#include "authrequestbuilder.h"
+#include "authrestclient.h"
+#include "qtrestclientauthversion.h"
+#endif
